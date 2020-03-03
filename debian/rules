@@ -1,0 +1,84 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# output every command that modifies files on the build system.
+#DH_VERBOSE = 1
+
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/default.mk
+
+include /usr/share/dpkg/architecture.mk
+
+export PYBUILD_NAME = grpcio
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# Flags for Python build
+export GRPC_PYTHON_BUILD_WITH_CYTHON = 1
+export GRPC_PYTHON_BUILD_SYSTEM_ZLIB = 1
+export GRPC_PYTHON_BUILD_SYSTEM_CARES = 1
+export GRPC_PYTHON_BUILD_SYSTEM_OPENSSL = 1
+export GRPC_PYTHON_ENABLE_DOCUMENTATION_BUILD = 1
+
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+export GEM2DEB_TEST_RUNNER = --check-dependencies
+export DH_RUBY = --gem-install
+export DH_RUBY_GEM_INSTALL_WHITELIST_APPEND = platform_check.rb version.rb
+
+export DH_RUBY_IGNORE_TESTS = all
+
+export V = 1
+
+LD_LIBRARY_PATH += :$(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)
+
+override_dh_auto_clean:
+	dh_auto_clean
+	dh_auto_clean -O--buildsystem=pybuild
+	find $(CURDIR)/src/python/grpcio/ -name \*.so -delete
+	$(RM) -rf $(CURDIR)/src/python/grpcio/grpcio.egg-info/
+	$(RM) -f \
+		$(CURDIR)/src/python/grpcio/grpc/_cython/_credentials/roots.pem \
+		$(CURDIR)/src/python/grpcio/grpc/_cython/cygrpc.cpp \
+		$(CURDIR)/src/python/grpcio/grpc/_grpcio_metadata.py
+
+override_dh_auto_configure:
+	dh_auto_configure
+	dh_auto_configure -O--buildsystem=pybuild
+
+override_dh_auto_build:
+	# Fake included protobuf .proto files
+	mkdir -p $(CURDIR)/Ithird_party/protobuf/
+	ln -s /usr/include $(CURDIR)/third_party/protobuf/src
+	$(MAKE) shared prefix=/usr
+	dh_auto_build -O--buildsystem=pybuild
+	dh_auto_build -O--buildsystem=ruby
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+#	make test_c
+endif
+	dh_auto_test -O--buildsystem=pybuild
+
+override_dh_auto_install:
+	$(MAKE) INSTALL_LIBDIR=/lib/$(DEB_HOST_MULTIARCH) \
+		install prefix=$(CURDIR)/debian/tmp/usr
+	dh_auto_install -O--buildsystem=pybuild
+	TOPDIR=$(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH) \
+		dh_auto_install -O--buildsystem=ruby
+	find $(CURDIR)/debian/ruby-grpc/ \
+		\( -name ca.pem -o -name server1.key -o -name server1.pem \) \
+		-exec chmod a-x {} \;
+
+override_dh_missing:
+	dh_missing --list-missing
+
+%:
+	dh $@ --with=python2,python3
+
+.PHONY: override_dh_auto_clean override_dh_auto_configure \
+	override_dh_auto_build override_dh_auto_test \
+	override_dh_auto_install override_dh_missing

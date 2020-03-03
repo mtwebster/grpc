@@ -1,0 +1,13 @@
+no-werror.diff
+unvendor-zlib.diff
+fix-libgrpc++-soname.diff
+add-wrap-memcpy-flags.diff
+install_libdir.patch
+# Ruby patches
+no-embed-libs.patch
+remove-missing-files-in-gemspec.patch
+no-make-in-extconf.patch
+use-system-grpc.patch
+fix-protoc-path.patch
+add_grpc_libdir.patch
+libgrpcpp_channelz_symlink.patch

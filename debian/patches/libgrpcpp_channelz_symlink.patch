@@ -1,0 +1,18 @@
+Description: Fix libgrpcpp_channelz soname symlink
+ Currently it should be postfixed with 1 (being version 1.15.1) instead of 6 .
+Author: Laszlo Boszormenyi (GCS) <gcs@debian.org>
+Last-Update: 2018-09-28
+
+---
+
+--- grpc-1.15.1.orig/Makefile
++++ grpc-1.15.1/Makefile
+@@ -3095,7 +3095,7 @@ endif
+ ifeq ($(SYSTEM),MINGW32)
+ 	$(Q) $(INSTALL) $(LIBDIR)/$(CONFIG)/libgrpcpp_channelz$(SHARED_VERSION_CPP)-dll.a $(prefix)/$(INSTALL_LIBDIR)/libgrpcpp_channelz.a
+ else ifneq ($(SYSTEM),Darwin)
+-	$(Q) ln -sf $(SHARED_PREFIX)grpcpp_channelz$(SHARED_VERSION_CPP).$(SHARED_EXT_CPP) $(prefix)/$(INSTALL_LIBDIR)/libgrpcpp_channelz.so.6
++	$(Q) ln -sf $(SHARED_PREFIX)grpcpp_channelz$(SHARED_VERSION_CPP).$(SHARED_EXT_CPP) $(prefix)/$(INSTALL_LIBDIR)/libgrpcpp_channelz.so.1
+ 	$(Q) ln -sf $(SHARED_PREFIX)grpcpp_channelz$(SHARED_VERSION_CPP).$(SHARED_EXT_CPP) $(prefix)/$(INSTALL_LIBDIR)/libgrpcpp_channelz.so
+ endif
+ ifneq ($(SYSTEM),MINGW32)

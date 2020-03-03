@@ -1,0 +1,154 @@
+Source: grpc
+Priority: optional
+Maintainer: Laszlo Boszormenyi (GCS) <gcs@debian.org>
+Uploaders: Andrew Pollock <apollock@debian.org>
+Build-Depends: debhelper (>= 11~), zlib1g-dev, libssl-dev, libprotobuf-dev, protobuf-compiler (>= 3.6.1~), libgflags-dev, libgtest-dev, libgoogle-perftools-dev, python, libprotoc-dev (>= 3.6.1~), libc-ares-dev,
+ gem2deb, ruby-google-protobuf (>= 3.6.1~), ruby-googleauth (>= 0.5.1~), ruby-googleapis-common-protos-types, ruby-rspec, ruby-simplecov,
+ dh-python,
+ python-all-dev, python3-all-dev,
+ cython, cython3,
+ python-concurrent.futures, python-enum34,
+ python-six, python3-six,
+ python-setuptools, python3-setuptools,
+ python-pkg-resources, python3-pkg-resources,
+ python-sphinx, python3-sphinx,
+ python-sphinx-rtd-theme, python3-sphinx-rtd-theme
+Standards-Version: 4.2.1
+Section: libs
+Homepage: http://www.grpc.io/
+Testsuite: autopkgtest-pkg-ruby
+XS-Ruby-Versions: all
+Vcs-Git: https://salsa.debian.org/debian/grpc.git
+Vcs-Browser: https://salsa.debian.org/debian/grpc
+
+Package: libgrpc-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libgrpc6 (= ${binary:Version}), ${misc:Depends}
+Conflicts: libgpr1-dev, libgpr2-dev
+Description: high performance general RPC framework (development)
+ A modern, open source remote procedure call (RPC) framework that can
+ run anywhere. It enables client and server applications to communicate
+ transparently, and makes it easier to build connected systems.
+ .
+ This package contains the headers and the static library for libgrpc6.
+
+Package: libgrpc6
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: high performance general RPC framework
+ A modern, open source remote procedure call (RPC) framework that can
+ run anywhere. It enables client and server applications to communicate
+ transparently, and makes it easier to build connected systems.
+ .
+ This package provides the gRPC C bindings.
+
+Package: libgrpc++-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libgrpc++1 (= ${binary:Version}), libgrpc-dev (=${binary:Version}), ${misc:Depends}
+Description: high performance general RPC framework (development)
+ A modern, open source remote procedure call (RPC) framework that can
+ run anywhere. It enables client and server applications to communicate
+ transparently, and makes it easier to build connected systems.
+ .
+ This package contains the headers and the static library for libgrpc++1.
+
+Package: libgrpc++1
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: high performance general RPC framework
+ A modern, open source remote procedure call (RPC) framework that can
+ run anywhere. It enables client and server applications to communicate
+ transparently, and makes it easier to build connected systems.
+ .
+ This package provides the gRPC C++ bindings.
+
+Package: protobuf-compiler-grpc
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, protobuf-compiler
+Description: high performance general RPC framework - protobuf plugin
+ A modern, open source remote procedure call (RPC) framework that can
+ run anywhere. It enables client and server applications to communicate
+ transparently, and makes it easier to build connected systems.
+ .
+ This package provides the plugins needed for compiling gRPC service
+ definitions with the protobuf compiler.
+
+Package: ruby-grpc
+Section: ruby
+Architecture: any
+X-DhRuby-Root: .
+XB-Ruby-Versions: ${ruby:Versions}
+Depends: ruby | ruby-interpreter,
+         ruby-google-protobuf (>= 3.6.1~),
+         ruby-googleauth (>= 0.5.1~),
+         ruby-googleapis-common-protos-types,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Conflicts: ruby-grpc (<< 1.13.0~pre2~)
+Replaces: ruby-grpc (<< 1.13.0~pre2~)
+Description: GRPC system in Ruby
+ Send RPCs from Ruby using GRPC. GRPC is a high performance, open-source
+ universal RPC framework.
+ .
+ Some features of gRPC:
+  * Simple service definition
+  * Works across languages and platforms
+  * Start quickly and scale
+  * Bi-directional streaming and integrated auth
+
+Package: ruby-grpc-tools
+Section: ruby
+Architecture: all
+X-DhRuby-Root: src/ruby/tools
+XB-Ruby-Versions: ${ruby:Versions}
+Depends: ruby | ruby-interpreter,
+         ruby-grpc,
+         protobuf-compiler-grpc,
+         ${misc:Depends}
+Conflicts: ruby-grpc-tools (<< 1.13.0~pre2~)
+Replaces: ruby-grpc-tools (<< 1.13.0~pre2~)
+Description: Development tools for Ruby gRPC
+ Ruby gRPC library allows sending RPCs from Ruby using GRPC.
+ GRPC is a high performance, open-source universal RPC framework.
+
+Package: python-grpcio
+Section: python
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${python:Depends},
+ ${shlibs:Depends},
+Provides:
+ ${python:Provides},
+XB-Python-Version:
+ ${python:Versions}
+Description: GRPC system (Python 2)
+ A modern, open source remote procedure call (RPC) framework that can
+ run anywhere. It enables client and server applications to communicate
+ transparently, and makes it easier to build connected systems.
+ .
+ This package contains the Python 2 bindings.
+
+Package: python3-grpcio
+Section: python
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${python3:Depends},
+ ${shlibs:Depends},
+Provides:
+ ${python3:Provides},
+XB-Python-Version:
+ ${python3:Versions}
+Description: GRPC system (Python 3)
+ A modern, open source remote procedure call (RPC) framework that can
+ run anywhere. It enables client and server applications to communicate
+ transparently, and makes it easier to build connected systems.
+ .
+ This package contains the Python 3 bindings.

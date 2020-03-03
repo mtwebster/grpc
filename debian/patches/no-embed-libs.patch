@@ -1,0 +1,15 @@
+--- a/src/ruby/ext/grpc/extconf.rb
++++ b/src/ruby/ext/grpc/extconf.rb
+@@ -31,9 +31,9 @@
+ 
+ ENV['AR'] = 'libtool -o' if RUBY_PLATFORM =~ /darwin/
+ 
+-ENV['EMBED_OPENSSL'] = 'true'
+-ENV['EMBED_ZLIB'] = 'true'
+-ENV['EMBED_CARES'] = 'true'
++ENV['EMBED_OPENSSL'] = 'false'
++ENV['EMBED_ZLIB'] = 'false'
++ENV['EMBED_CARES'] = 'false'
+ ENV['ARCH_FLAGS'] = RbConfig::CONFIG['ARCH_FLAG']
+ ENV['ARCH_FLAGS'] = '-arch i386 -arch x86_64' if RUBY_PLATFORM =~ /darwin/
+ ENV['CPPFLAGS'] = '-DGPR_BACKWARDS_COMPATIBILITY_MODE'
